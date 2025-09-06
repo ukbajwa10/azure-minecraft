@@ -46,7 +46,7 @@ resource "azurerm_container_group" "this" {
       EULA          = "TRUE"
       TYPE          = var.server_type    # PAPER, VANILLA, FABRIC, FORGE, etc.
       VERSION       = var.server_version # e.g., "1.21.1"
-      MEMORY        = "${var.memory_gb}G"
+      MEMORY        = "5G"
       MOTD          = var.motd
       DIFFICULTY    = var.difficulty # peaceful/easy/normal/hard
       PVP           = var.pvp ? "true" : "false"
