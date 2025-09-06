@@ -43,7 +43,7 @@ variable "server_type" {
 variable "server_version" {
   description = "Minecraft version (e.g. 1.21.1). Leave empty for latest of type."
   type        = string
-  default     = ""
+  default     = "1.21.1"
 }
 
 variable "server_port" {
