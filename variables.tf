@@ -14,12 +14,6 @@ variable "quota" {
   type = number
 }
 
-variable "server_port" {
-  description = "Minecraft TCP port."
-  type        = number
-  default     = 25565
-}
-
 # Container sizing
 variable "cpu" {
   description = "vCPU for ACI container."
