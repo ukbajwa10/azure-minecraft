@@ -1,5 +1,5 @@
 project_name = "MINECRAFT"
 location = "southcentralus"
 env = "UKB"
-quota = 50
+quota = 100
 server_port = 25565
