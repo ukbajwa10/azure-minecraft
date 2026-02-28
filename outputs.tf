@@ -1,5 +1,5 @@
 output "fqdn" {
-  description = "Public FQDN players can use in their Minecraft client."
+  description = "Public FQDN players can use in their Hytale client."
   value       = azurerm_container_group.this.fqdn
 }
 

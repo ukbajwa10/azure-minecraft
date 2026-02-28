@@ -12,7 +12,7 @@ resource "azurerm_storage_account" "this" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_share" "world" {
+resource "azurerm_storage_share" "data" {
   name               = lower("fs${var.env}${var.project_name}")
   storage_account_id = azurerm_storage_account.this.id
   quota              = var.quota
@@ -28,46 +28,42 @@ resource "azurerm_container_group" "this" {
 
   exposed_port {
     port     = var.server_port
-    protocol = "TCP"
+    protocol = "UDP"
   }
 
   container {
-    name   = "minecraft"
+    name   = "hytale"
     image  = var.container_image
     cpu    = var.cpu
     memory = var.memory_gb
 
     ports {
       port     = var.server_port
-      protocol = "TCP"
+      protocol = "UDP"
     }
 
     environment_variables = {
-      EULA          = "TRUE"
-      TYPE          = var.server_type    # PAPER, VANILLA, FABRIC, FORGE, etc.
-      VERSION       = var.server_version # e.g., "1.21.1"
-      MEMORY        = "5G"
-      MOTD          = var.motd
-      DIFFICULTY    = var.difficulty # peaceful/easy/normal/hard
-      PVP           = var.pvp ? "true" : "false"
-      VIEW_DISTANCE = tostring(var.view_distance)
-      MAX_PLAYERS   = tostring(var.max_players)
-      # ENABLE_WHITELIST = var.enable_whitelist ? "true" : "false"
-      # OPS              = join(",", var.ops)       # comma-separated
-      # WHITELIST        = join(",", var.whitelist) # comma-separated
-      # SPAWN_PROTECTION = tostring(var.spawn_protection)
-      # Uncomment if you want RCON
-      # ENABLE_RCON      = "true"
-      # RCON_PASSWORD   = var.rcon_password
-      # RCON_PORT       = tostring(var.rcon_port)
-      SERVER_PORT = tostring(var.server_port)
+      PUID             = "1000"
+      PGID             = "1000"
+      SERVER_NAME      = var.server_name
+      DEFAULT_PORT     = tostring(var.server_port)
+      MAX_PLAYERS      = tostring(var.max_players)
+      VIEW_DISTANCE    = tostring(var.view_distance)
+      AUTH_MODE        = var.auth_mode
+      MAX_MEMORY       = var.max_memory
+      ENABLE_BACKUPS   = var.enable_backups ? "true" : "false"
+      BACKUP_FREQUENCY = tostring(var.backup_frequency)
+      DISABLE_SENTRY   = var.disable_sentry ? "true" : "false"
+      USE_AOT_CACHE    = "true"
+      PATCHLINE        = var.patchline
+      DOWNLOAD_ON_START = "true"
     }
 
     volume {
-      name                 = "world"
-      mount_path           = "/data"
+      name                 = "data"
+      mount_path           = "/home/hytale/server-files"
       read_only            = false
-      share_name           = azurerm_storage_share.world.name
+      share_name           = azurerm_storage_share.data.name
       storage_account_name = azurerm_storage_account.this.name
       storage_account_key  = azurerm_storage_account.this.primary_access_key
     }
