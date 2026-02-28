@@ -1,12 +1,12 @@
-resource "azurerm_resource_group" "this" {
+resource "azurerm_resource_group" "rg" {
   name     = "RG-${var.env}-${var.project_name}"
   location = var.location
 }
 
-resource "azurerm_storage_account" "this" {
+resource "azurerm_storage_account" "sa" {
   name                     = lower("sa${var.env}${var.project_name}")
-  resource_group_name      = azurerm_resource_group.this.name
-  location                 = azurerm_resource_group.this.location
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
   account_kind             = "FileStorage"
   account_tier             = "Premium"
   account_replication_type = "LRS"
@@ -14,14 +14,14 @@ resource "azurerm_storage_account" "this" {
 
 resource "azurerm_storage_share" "data" {
   name               = lower("fs${var.env}${var.project_name}")
-  storage_account_id = azurerm_storage_account.this.id
+  storage_account_name = azurerm_storage_account.sa.name
   quota              = var.quota
 }
 
-resource "azurerm_container_group" "this" {
+resource "azurerm_container_group" "aci" {
   name                = "ACI-${var.env}-${var.project_name}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = azurerm_resource_group.rg.name
   ip_address_type     = "Public"
   dns_name_label      = lower("${var.env}${var.project_name}")
   os_type             = "Linux"
@@ -64,8 +64,8 @@ resource "azurerm_container_group" "this" {
       mount_path           = "/home/hytale/server-files"
       read_only            = false
       share_name           = azurerm_storage_share.data.name
-      storage_account_name = azurerm_storage_account.this.name
-      storage_account_key  = azurerm_storage_account.this.primary_access_key
+      storage_account_name = azurerm_storage_account.sa.name
+      storage_account_key  = azurerm_storage_account.sa.primary_access_key
     }
   }
 }
