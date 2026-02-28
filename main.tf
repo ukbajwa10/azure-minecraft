@@ -14,7 +14,7 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_storage_share" "data" {
   name               = lower("fs${var.env}${var.project_name}")
-  storage_account_name = azurerm_storage_account.sa.name
+  storage_account_id = azurerm_storage_account.sa.id
   quota              = var.quota
 }
 
@@ -43,19 +43,19 @@ resource "azurerm_container_group" "aci" {
     }
 
     environment_variables = {
-      PUID             = "1000"
-      PGID             = "1000"
-      SERVER_NAME      = var.server_name
-      DEFAULT_PORT     = tostring(var.server_port)
-      MAX_PLAYERS      = tostring(var.max_players)
-      VIEW_DISTANCE    = tostring(var.view_distance)
-      AUTH_MODE        = var.auth_mode
-      MAX_MEMORY       = var.max_memory
-      ENABLE_BACKUPS   = var.enable_backups ? "true" : "false"
-      BACKUP_FREQUENCY = tostring(var.backup_frequency)
-      DISABLE_SENTRY   = var.disable_sentry ? "true" : "false"
-      USE_AOT_CACHE    = "true"
-      PATCHLINE        = var.patchline
+      PUID              = "1000"
+      PGID              = "1000"
+      SERVER_NAME       = var.server_name
+      DEFAULT_PORT      = tostring(var.server_port)
+      MAX_PLAYERS       = tostring(var.max_players)
+      VIEW_DISTANCE     = tostring(var.view_distance)
+      AUTH_MODE         = var.auth_mode
+      MAX_MEMORY        = var.max_memory
+      ENABLE_BACKUPS    = var.enable_backups ? "true" : "false"
+      BACKUP_FREQUENCY  = tostring(var.backup_frequency)
+      DISABLE_SENTRY    = var.disable_sentry ? "true" : "false"
+      USE_AOT_CACHE     = "true"
+      PATCHLINE         = var.patchline
       DOWNLOAD_ON_START = "true"
     }
 
